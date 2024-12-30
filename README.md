@@ -25,14 +25,16 @@ This project focuses on classifying skin cancer lesions using the HAM10000 datas
 ## Observations
 
 ### Overview of dataset
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here](https://raw.githubusercontent.com/AzimAkhmedov/cancer-classification/refs/heads/main/assets/dataset.jpg))
 
 ### Params of model
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here](https://raw.githubusercontent.com/AzimAkhmedov/cancer-classification/refs/heads/main/assets/model_params.jpg))
 
 ### Output of train data
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here](https://raw.githubusercontent.com/AzimAkhmedov/cancer-classification/refs/heads/main/assets/output.jpg))
 
+### Train validation and accuracy
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here](https://raw.githubusercontent.com/AzimAkhmedov/cancer-classification/refs/heads/main/assets/train.jpg))
 
 
 ## Run Locally
