@@ -25,7 +25,7 @@ This project focuses on classifying skin cancer lesions using the HAM10000 datas
 ## Observations
 
 ### Overview of dataset
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here](https://raw.githubusercontent.com/AzimAkhmedov/cancer-classification/refs/heads/main/assets/dataset.jpg))
+![App Screenshot]([https://via.placeholder.com/468x300?text=App+Screenshot+Here](https://raw.githubusercontent.com/AzimAkhmedov/cancer-classification/refs/heads/main/assets/dataset.jpg](https://github.com/AzimAkhmedov/cancer-classification/blob/main/assets/dataset.jpg)))
 
 ### Params of model
 ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here](https://raw.githubusercontent.com/AzimAkhmedov/cancer-classification/refs/heads/main/assets/model_params.jpg))
