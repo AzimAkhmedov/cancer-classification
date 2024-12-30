@@ -40,7 +40,6 @@ skin_df = pd.read_csv('data/HAM10000_metadata.csv')
 
 SIZE=32
 
-# label encoding to numeric values from text
 le = LabelEncoder()
 le.fit(skin_df['dx'])
 LabelEncoder()
@@ -48,7 +47,6 @@ print(list(le.classes_))
  
 skin_df['label'] = le.transform(skin_df["dx"]) 
 
-# Data distribution visualization
 fig = plt.figure(figsize=(12,8))
 
 ax1 = fig.add_subplot(221)
@@ -74,13 +72,7 @@ ax4.set_title('Age')
 plt.tight_layout()
 plt.show()
 
-
-# Distribution of data into various classes 
 from sklearn.utils import resample
-
-#Balance data.
-# Many ways to balance data... you can also try assigning weights during model.fit
-#Separate each classes, resample, and combine back into single dataframe
 
 df_0 = skin_df[skin_df['label'] == 0]
 df_1 = skin_df[skin_df['label'] == 1]
@@ -99,29 +91,20 @@ df_4_balanced = resample(df_4, replace=True, n_samples=n_samples, random_state=4
 df_5_balanced = resample(df_5, replace=True, n_samples=n_samples, random_state=42)
 df_6_balanced = resample(df_6, replace=True, n_samples=n_samples, random_state=42)
 
-#Combined back to a single dataframe
 skin_df_balanced = pd.concat([df_0_balanced, df_1_balanced, 
                               df_2_balanced, df_3_balanced, 
                               df_4_balanced, df_5_balanced, df_6_balanced])
 
-#Check the distribution. All classes should be balanced now.
-
-#Now time to read images based on image ID from the CSV file
-#This is the safest way to read images as it ensures the right image is read for the right ID
 image_path = {os.path.splitext(os.path.basename(x))[0]: x
                      for x in glob(os.path.join('./data/images', '*.jpg'))}
 
-
-#Define the path and add as a new column
 skin_df_balanced['path'] = skin_df['image_id'].map(image_path.get)
 print("Sample data:")
 print(skin_df_balanced['path'].sample(5))
-#Use the path to read images.
 skin_df_balanced['image'] = skin_df_balanced['path'].map(lambda x: np.asarray(Image.open(x).resize((SIZE,SIZE))))
 
 
-n_samples = 5  # number of samples for plotting
-# Plotting
+n_samples = 5 
 fig, m_axs = plt.subplots(7, n_samples, figsize = (4*n_samples, 3*7))
 for n_axs, (type_name, type_rows) in zip(m_axs, 
                                          skin_df_balanced.sort_values(['dx']).groupby('dx')):
@@ -130,11 +113,10 @@ for n_axs, (type_name, type_rows) in zip(m_axs,
         c_ax.imshow(c_row['image'])
         c_ax.axis('off')
 
-#Convert dataframe column of images into numpy array
 X = np.asarray(skin_df_balanced['image'].tolist())
-X = X/255.  # Scale values to 0-1. You can also used standardscaler or other scaling methods.
-Y=skin_df_balanced['label']  #Assign label values to Y
-Y_cat = to_categorical(Y, num_classes=7) #Convert to categorical as this is a multiclass classification problem
+X = X/255. 
+Y=skin_df_balanced['label'] 
+Y_cat = to_categorical(Y, num_classes=7)
 x_train, x_test, y_train, y_test = train_test_split(X, Y_cat, test_size=0.25, random_state=42)
 
 
@@ -199,22 +181,16 @@ plt.legend()
 plt.show()
 
 
-# Prediction on test data
 y_pred = model.predict(x_test)
-# Convert predictions classes to one hot vectors 
 y_pred_classes = np.argmax(y_pred, axis = 1) 
-# Convert test data to one hot vectors
 y_true = np.argmax(y_test, axis = 1) 
 
-#Print confusion matrix
 cm = confusion_matrix(y_true, y_pred_classes)
 
 fig, ax = plt.subplots(figsize=(6,6))
 sns.set(font_scale=1.6)
 sns.heatmap(cm, annot=True, linewidths=.5, ax=ax)
 
-
-#PLot fractional incorrect misclassifications
 incorr_fraction = 1 - np.diag(cm) / np.sum(cm, axis=1)
 plt.bar(np.arange(7), incorr_fraction)
 plt.xlabel('True Label')
