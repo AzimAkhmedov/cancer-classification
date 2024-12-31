@@ -21,6 +21,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
+
+from stats import printEpochs
 from glob import glob
 import seaborn as sns
 from PIL import Image
@@ -43,34 +45,9 @@ SIZE=32
 le = LabelEncoder()
 le.fit(skin_df['dx'])
 LabelEncoder()
-print(list(le.classes_))
  
 skin_df['label'] = le.transform(skin_df["dx"]) 
 
-fig = plt.figure(figsize=(12,8))
-
-ax1 = fig.add_subplot(221)
-skin_df['dx'].value_counts().plot(kind='bar', ax=ax1)
-ax1.set_ylabel('Count')
-ax1.set_title('Cell Type');
-
-ax2 = fig.add_subplot(222)
-skin_df['sex'].value_counts().plot(kind='bar', ax=ax2)
-ax2.set_ylabel('Count', size=15)
-ax2.set_title('Sex');
-
-ax3 = fig.add_subplot(223)
-skin_df['localization'].value_counts().plot(kind='bar')
-ax3.set_ylabel('Count',size=12)
-ax3.set_title('Localization')
-
-ax4 = fig.add_subplot(224)
-sample_age = skin_df[pd.notnull(skin_df['age'])]
-sns.distplot(sample_age['age'], fit=stats.norm, color='red');
-ax4.set_title('Age')
-
-plt.tight_layout()
-plt.show()
 
 from sklearn.utils import resample
 
@@ -99,19 +76,11 @@ image_path = {os.path.splitext(os.path.basename(x))[0]: x
                      for x in glob(os.path.join('./data/images', '*.jpg'))}
 
 skin_df_balanced['path'] = skin_df['image_id'].map(image_path.get)
-print("Sample data:")
-print(skin_df_balanced['path'].sample(5))
+print("Loading data...")
+
 skin_df_balanced['image'] = skin_df_balanced['path'].map(lambda x: np.asarray(Image.open(x).resize((SIZE,SIZE))))
 
 
-n_samples = 5 
-fig, m_axs = plt.subplots(7, n_samples, figsize = (4*n_samples, 3*7))
-for n_axs, (type_name, type_rows) in zip(m_axs, 
-                                         skin_df_balanced.sort_values(['dx']).groupby('dx')):
-    n_axs[0].set_title(type_name)
-    for c_ax, (_, c_row) in zip(n_axs, type_rows.sample(n_samples, random_state=1234).iterrows()):
-        c_ax.imshow(c_row['image'])
-        c_ax.axis('off')
 
 X = np.asarray(skin_df_balanced['image'].tolist())
 X = X/255. 
@@ -161,41 +130,16 @@ print('Test accuracy:', score[1])
 loss = history.history['loss']
 val_loss = history.history['val_loss']
 epochs = range(1, len(loss) + 1)
-plt.plot(epochs, loss, 'y', label='Training loss')
-plt.plot(epochs, val_loss, 'r', label='Validation loss')
-plt.title('Training and validation loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.legend()
-plt.show()
+
 
 
 acc = history.history['acc']
 val_acc = history.history['val_acc']
-plt.plot(epochs, acc, 'y', label='Training acc')
-plt.plot(epochs, val_acc, 'r', label='Validation acc')
-plt.title('Training and validation accuracy')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.legend()
-plt.show()
-
 
 y_pred = model.predict(x_test)
-y_pred_classes = np.argmax(y_pred, axis = 1) 
-y_true = np.argmax(y_test, axis = 1) 
 
-cm = confusion_matrix(y_true, y_pred_classes)
-
-fig, ax = plt.subplots(figsize=(6,6))
-sns.set(font_scale=1.6)
-sns.heatmap(cm, annot=True, linewidths=.5, ax=ax)
-
-incorr_fraction = 1 - np.diag(cm) / np.sum(cm, axis=1)
-plt.bar(np.arange(7), incorr_fraction)
-plt.xlabel('True Label')
-plt.ylabel('Fraction of incorrect predictions')
-
+model.save('model.h5')
+print(y_pred)
 
         
         
