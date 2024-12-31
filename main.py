@@ -17,25 +17,20 @@ Dermatofibroma (df)
 """
 
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
 
-from stats import printEpochs
 from glob import glob
-import seaborn as sns
 from PIL import Image
 
 np.random.seed(42)
 from sklearn.metrics import confusion_matrix
 
-import keras
 from tensorflow.keras.utils import to_categorical
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, BatchNormalization
+from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D
 from sklearn.model_selection import train_test_split
-from scipy import stats
 from sklearn.preprocessing import LabelEncoder
 
 skin_df = pd.read_csv('data/HAM10000_metadata.csv')
